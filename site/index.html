@@ -197,11 +197,14 @@ footer .rule { height: 1px; background: rgba(255 255 255 / 0.08); margin-bottom:
   <h2><span class="n">0</span>fiddy provision</h2>
   <p class="dim">A read node needs a server: <strong>4 vCPU, 16 GB RAM, 200 GB SSD</strong>, Ubuntu 22.04+.
   That runs about <strong>$100/month</strong> on AWS; any equivalent VPS works.</p>
+  <!-- Keep the @ as &#64;: Cloudflare Scrape Shield rewrites literal addresses into a
+       span that needs its decoder script, which this page's CSP blocks — the command
+       would render as "[email protected]" live. -->
   <pre><span class="c"># Scripted AWS path (needs the aws CLI configured):</span>
 <span class="k">fiddy provision --aws</span>
 
 <span class="c"># Or any server you already have:</span>
-<span class="k">fiddy provision --ssh ubuntu@203.0.113.10</span></pre>
+<span class="k">fiddy provision --ssh ubuntu&#64;203.0.113.10</span></pre>
   <p class="dim">The AWS path creates a t3.xlarge with Docker preinstalled, generates an SSH keypair into
   <code class="inline">~/.fiddy/</code>, and locks the security group down: SSH and the node API answer
   <strong>your IP only</strong>; gossip ports stay open to the network (that's how your node talks to peers).
