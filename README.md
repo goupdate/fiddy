@@ -30,6 +30,14 @@ authorizes the app key. Read
 [the seed-phrase safety section](https://fiddy.fun/client#safety) before
 importing anything.
 
+## One-click node deploy (optional)
+
+`services/deploy-agent` runs the same `fiddy provision` / `fiddy node up` steps
+as a small token-authenticated HTTP service, so an in-client **hatch node** flow
+(or any UI, or `curl`) can boot a node on a server you already pay for and point
+the client at the endpoint it reports. Contract, env, nginx note and tests:
+[`services/deploy-agent/README.md`](./services/deploy-agent/README.md).
+
 ## What you get
 
 - **Your reads and writes, your infra** — feed, casts, follows, reactions and
