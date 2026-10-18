@@ -6,12 +6,16 @@ Status as of 2026-10-18 (IST). Deadline is pinned from the bounty cast itself, n
 
 | Fact | Value | How it was verified |
 | --- | --- | --- |
-| Cast | https://farcaster.xyz/balajis.eth/0x50184b62 | GET `farcaster.xyz`, plus the cast page fetch |
-| Hash | `0x50184b62b4c52fd76628713562e1eda3dccaf63d` | Warpcast `search-casts` + `castsByFid` (fid 37) |
+| Cast | https://farcaster.xyz/balajis.eth/0x50184b62 | `GET farcaster.xyz`, plus the cast page fetch |
+| Hash | `0x50184b62b4c52fd76628713562e1eda3dccaf63d` | `castById?fid=37` on a public hub + Warpcast `search-casts`; both agree |
 | Author | **@balajis.eth** (FID 37) | both API reads agree |
-| Posted | **2026-10-17T14:47:30Z** | `castsByFid?fid=37` returned the hash with this timestamp |
+| Posted | **2026-10-17T14:47:30Z** | `castById` returned the hash with Farcaster-epoch `182789250` = unix `1792248450` |
 | Deadline | **2026-10-24T14:47:30Z** = Sat 2026-10-24 20:17:30 IST | +7 days exactly, per the cast text |
 | Engagement at read time | 24 replies, 45 recasts, 186 reactions | Warpcast API |
+
+**`docs/BOUNTY-DEADLINE.md` is the single source of truth for the cast URL, its timestamp and the deadline**, with
+the verbatim permalink, the reproduce command, the named confirmation sources and the 48h-early target. Read it
+before posting a submission.
 
 Two corrections to earlier notes on this card:
 

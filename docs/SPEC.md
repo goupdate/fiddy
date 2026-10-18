@@ -13,7 +13,7 @@ Ship three things as one coherent product:
 3. **The tutorial microsite** — quickstart at the top (three commands), then a mobile- and desktop-friendly tutorial that teaches protocol concepts as it goes: FIDs, custody addresses, app keys (gasless `KEY_ADD`), Snapchain messages, read nodes vs validators and the mempool path, storage rent, seed-phrase safety.
 4. **The Fiddy Agent (the differentiator)** — every client user can hatch their own autonomous Hermes agent, hosted on Agent37 cloud, living inside the client. Not a chatbot bolt-on: a real Hermes instance with its full feature set — scheduled tasks (cron), skills, memory, and every messaging channel Hermes supports (Farcaster first, then iMessage, Discord, Telegram, WhatsApp, email, web/API) — with owner approval on every channel connection. No other Farcaster client ships an agent that works for you 24/7 across your whole communication surface.
 
-Submission: reply to the bounty cast with (1) microsite URL, (2) github.com/ivcained/fiddy (MIT), (3) a voucher's public Farcaster endorsement. Deadline: 7 days from the bounty post (~2026-10-25).
+Submission: reply to the bounty cast with (1) microsite URL, (2) github.com/ivcained/fiddy (MIT), (3) a voucher's public Farcaster endorsement. Cast: https://farcaster.xyz/balajis.eth/0x50184b62, posted 2026-10-17T14:47:30Z → hard deadline 2026-10-24T14:47:30Z (verified; see `docs/BOUNTY-DEADLINE.md`; the earlier "~2026-10-25" estimate and the 10X Chris attribution were both wrong).
 
 ## User Stories
 
