@@ -102,7 +102,7 @@ export function HomeLandingPage() {
     useState(false);
 
   return (
-    <Page className="landing-bg" meta={{ title: 'Farcaster' }}>
+    <Page className="landing-bg" meta={{ title: 'Fiddy' }}>
       <div className="hidden min-h-dvh w-full flex-col p-[60px] sm:flex">
         <div className="flex flex-row items-center space-x-3 text-md">
           <LogoBrandContextMenu>
