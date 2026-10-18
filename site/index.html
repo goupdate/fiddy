@@ -1,0 +1,291 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Fiddy — your own Farcaster client on your own node, in three commands</title>
+<meta name="description" content="Provision compute, run a Snapchain read node, boot a client. No API keys, no third parties. Plus: your own Hermes agent inside the client.">
+<meta property="og:title" content="Fiddy — three commands to your own Farcaster client">
+<meta property="og:description" content="Your node. Your client. Your agent. No API keys.">
+<style>
+/* ---- Fiddy dark material: Solid Glass rules, hand-applied ----
+   1. Finish at the edge: rim of light on top, hairline round, shade under.
+   2. Heavy, not airy: neutral panes, blur never boosts colour.
+   3. Depth is thickness: panel < card < popover.
+   4. One state: hover/chosen/held share one small pane. */
+:root {
+  --ground: #161715;
+  --ink: #eef0e8;
+  --ink-dim: #a7ab9e;
+  --lime: #d4ff3f;
+  --lime-ink: #1a1c10;        /* dark ink on chartreuse — ~6:1, never light text */
+  --lime-deep: #7cb518;       /* chartreuse darkened for text/icons on dark */
+  --pane: rgba(255 255 255 / 0.045);
+  --card: rgba(255 255 255 / 0.075);
+  --popover: rgba(28 30 26 / 0.92);
+  --rim: rgba(255 255 255 / 0.14);
+  --inner: rgba(255 255 255 / 0.05);
+  --edge: rgba(0 0 0 / 0.5);
+  --shade: rgba(0 0 0 / 0.35);
+  --mono: "SF Mono", ui-monospace, "JetBrains Mono", Menlo, monospace;
+}
+* { margin: 0; padding: 0; box-sizing: border-box; }
+html { scroll-behavior: smooth; }
+body {
+  background: var(--ground); color: var(--ink);
+  font: 16px/1.6 -apple-system, BlinkMacSystemFont, "Inter", "Segoe UI", sans-serif;
+  -webkit-font-smoothing: antialiased;
+}
+::selection { background: var(--lime); color: var(--lime-ink); }
+
+.pane {
+  background: var(--pane);
+  border-radius: 14px;
+  box-shadow:
+    inset 0 1px 0 var(--rim),
+    inset 0 2px 0 var(--inner),
+    inset 0 0 0 1px var(--edge),
+    0 2px 8px var(--shade);
+  backdrop-filter: blur(14px); -webkit-backdrop-filter: blur(14px);
+}
+.card {
+  background: var(--card);
+  border-radius: 18px;
+  box-shadow:
+    inset 0 1px 0 var(--rim),
+    inset 0 2px 0 var(--inner),
+    inset 0 0 0 1px var(--edge),
+    0 4px 16px var(--shade);
+  backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
+}
+@media (prefers-reduced-transparency: reduce) {
+  .pane, .card { backdrop-filter: none; -webkit-backdrop-filter: none; background: #23241f; }
+}
+
+.wrap { max-width: 780px; margin: 0 auto; padding: 0 20px; }
+
+/* ---- hero ---- */
+header.hero { padding: 72px 0 40px; }
+.wordmark {
+  font: 700 15px/1 var(--mono); letter-spacing: 0.14em; color: var(--lime);
+  text-transform: uppercase; margin-bottom: 28px; display: flex; align-items: center; gap: 10px;
+}
+.wordmark .dot { width: 10px; height: 10px; border-radius: 50%; background: var(--lime);
+  box-shadow: 0 0 12px rgba(212 255 63 / 0.6); }
+h1 { font-size: clamp(30px, 6vw, 46px); line-height: 1.12; letter-spacing: -0.02em; font-weight: 750; }
+h1 .lime { color: var(--lime); }
+.lede { color: var(--ink-dim); font-size: 18px; margin-top: 16px; max-width: 34em; }
+
+/* ---- quickstart ---- */
+.quickstart { margin: 36px 0 8px; padding: 6px; }
+.qs-cmd { display: flex; align-items: baseline; gap: 14px; padding: 16px 18px; border-radius: 12px; }
+.qs-cmd + .qs-cmd { margin-top: 4px; }
+.qs-cmd:hover, .qs-cmd:active { background: rgba(255 255 255 / 0.06); }  /* one state */
+.qs-n { font: 700 13px/1 var(--mono); color: var(--lime-ink); background: var(--lime);
+  border-radius: 7px; padding: 5px 8px; flex: none;
+  box-shadow: inset 0 1px 0 rgba(255 255 255 / 0.45), 0 2px 6px var(--shade); }
+.qs-cmd code { font: 500 15px/1.5 var(--mono); color: var(--ink); overflow-x: auto; white-space: nowrap; }
+.qs-cmd small { display: block; font: 13px/1.4 -apple-system, sans-serif; color: var(--ink-dim); white-space: normal; }
+.qs-copy { margin-left: auto; flex: none; font: 12px var(--mono); color: var(--ink-dim);
+  background: none; border: none; cursor: pointer; padding: 6px 8px; border-radius: 8px; }
+.qs-copy:hover { color: var(--lime); background: rgba(255 255 255 / 0.06); }
+
+/* ---- sections ---- */
+section { padding: 56px 0 8px; }
+h2 { font-size: 26px; letter-spacing: -0.01em; margin-bottom: 6px; }
+h2 .n { color: var(--lime-deep); font-family: var(--mono); font-size: 15px; vertical-align: super; margin-right: 6px; }
+.kicker { font: 600 12px/1 var(--mono); letter-spacing: 0.12em; text-transform: uppercase; color: var(--lime-deep); margin-bottom: 10px; }
+p { margin: 12px 0; }
+p.dim, li { color: var(--ink-dim); }
+strong { color: var(--ink); font-weight: 650; }
+a { color: var(--lime); text-decoration: none; border-bottom: 1px solid rgba(212 255 63 / 0.35); }
+a:hover { border-bottom-color: var(--lime); }
+ul { padding-left: 22px; margin: 12px 0; }
+li { margin: 6px 0; }
+code.inline { font: 0.88em var(--mono); background: var(--pane); padding: 2px 7px; border-radius: 6px;
+  box-shadow: inset 0 0 0 1px var(--edge); }
+
+pre {
+  font: 13.5px/1.65 var(--mono); color: var(--ink);
+  background: #10110f; padding: 18px 20px; border-radius: 14px; overflow-x: auto;
+  margin: 16px 0;
+  box-shadow: inset 0 1px 0 rgba(255 255 255 / 0.07), inset 0 0 0 1px var(--edge), 0 4px 16px var(--shade);
+}
+pre .c { color: #6b7060; } pre .k { color: var(--lime); }
+
+.note { padding: 16px 20px; margin: 18px 0; }
+.note .t { font: 700 12px/1 var(--mono); letter-spacing: 0.1em; text-transform: uppercase; margin-bottom: 8px; }
+.note.warn .t { color: var(--lime); }
+.note p { margin: 6px 0; font-size: 15px; }
+
+table { width: 100%; border-collapse: collapse; margin: 16px 0; font-size: 14.5px; }
+th { text-align: left; font: 700 11.5px/1 var(--mono); letter-spacing: 0.1em; text-transform: uppercase;
+  color: var(--lime-deep); padding: 10px 14px 8px; }
+td { padding: 10px 14px; color: var(--ink-dim); border-top: 1px solid rgba(255 255 255 / 0.06); vertical-align: top; }
+td:first-child { color: var(--ink); font-weight: 600; white-space: nowrap; }
+
+/* ---- agent strip ---- */
+.agent { margin-top: 20px; padding: 24px; }
+.channels { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 14px; }
+.chip { font: 600 12.5px/1 var(--mono); color: var(--ink); padding: 8px 13px; border-radius: 999px;
+  background: var(--pane);
+  box-shadow: inset 0 1px 0 var(--rim), inset 0 0 0 1px var(--edge); }
+.chip.hot { background: var(--lime); color: var(--lime-ink);
+  box-shadow: inset 0 1px 0 rgba(255 255 255 / 0.45), 0 2px 8px var(--shade); }
+
+footer { padding: 56px 0 72px; color: var(--ink-dim); font-size: 14px; }
+footer .rule { height: 1px; background: rgba(255 255 255 / 0.08); margin-bottom: 28px; }
+
+@media (max-width: 560px) {
+  header.hero { padding: 48px 0 28px; }
+  .qs-cmd { flex-wrap: wrap; }
+  .qs-copy { margin-left: 0; }
+}
+</style>
+</head>
+<body>
+
+<header class="hero"><div class="wrap">
+  <div class="wordmark"><span class="dot"></span>fiddy.fun</div>
+  <h1>Your own Farcaster client.<br>Your own node. <span class="lime">Three commands.</span></h1>
+  <p class="lede">No API keys from anyone. You furnish the compute; a Snapchain read node
+  syncs the network; the Fiddy client reads and writes through it. Then — the part no other
+  client has — hatch your own Hermes agent that works for you 24/7.</p>
+
+  <div class="card quickstart" id="quickstart">
+    <div class="qs-cmd">
+      <span class="qs-n">0</span>
+      <span><code>fiddy provision --aws</code><small>furnish the compute — or <code class="inline">--ssh you@server</code> for any box you have</small></span>
+      <button class="qs-copy" data-c="fiddy provision --aws">copy</button>
+    </div>
+    <div class="qs-cmd">
+      <span class="qs-n">1</span>
+      <span><code>fiddy node up</code><small>install + sync a Snapchain read node on it</small></span>
+      <button class="qs-copy" data-c="fiddy node up">copy</button>
+    </div>
+    <div class="qs-cmd">
+      <span class="qs-n">2</span>
+      <span><code>fiddy client up</code><small>boot the Fiddy client pointed at your node</small></span>
+      <button class="qs-copy" data-c="fiddy client up">copy</button>
+    </div>
+  </div>
+  <p class="dim" style="font-size:14px">Get the CLI: <code class="inline">git clone https://github.com/ivcained/fiddy &amp;&amp; cd fiddy</code> — the <code class="inline">bin/fiddy</code> script is the whole tool. Full tutorial below.</p>
+</div></header>
+
+<section id="architecture"><div class="wrap">
+  <div class="kicker">Before you type anything</div>
+  <h2>How Farcaster actually fits together</h2>
+  <p class="dim">Farcaster is <strong>hybrid</strong>: identity lives onchain (OP Mainnet), data lives offchain.
+  Onchain is used only when security and consistency are critical — creating an account, paying storage rent,
+  registering keys. Everything social — casts, follows, reactions, profile pictures — is an offchain message
+  signed by a key the chain knows about.</p>
+  <table>
+    <tr><th>Piece</th><th>What it is</th></tr>
+    <tr><td>FID</td><td>Your account number, minted onchain to your custody address. Everything you do offchain references it.</td></tr>
+    <tr><td>Custody address</td><td>The Ethereum key that owns your FID. The master key. It authorizes everything else and touches nothing day-to-day.</td></tr>
+    <tr><td>App key (signer)</td><td>An ed25519 key a client uses to sign messages for your FID. Authorized by your custody address. Revocable. This is what "log in to a client" means under the hood.</td></tr>
+    <tr><td>Snapchain</td><td>The peer-to-peer network storing all user data. Validators propose blocks; read nodes follow, store, and serve APIs.</td></tr>
+    <tr><td>Storage rent</td><td>A small onchain payment that buys your FID the right to store data. No rent, no writes. (Your account already has storage if you've used Farcaster.)</td></tr>
+  </table>
+</div></section>
+
+<section id="step0"><div class="wrap">
+  <div class="kicker">Command 0</div>
+  <h2><span class="n">0</span>fiddy provision</h2>
+  <p class="dim">A read node needs a server: <strong>4 vCPU, 16 GB RAM, 200 GB SSD</strong>, Ubuntu 22.04+.
+  That runs about <strong>$100/month</strong> on AWS; any equivalent VPS works.</p>
+  <pre><span class="c"># Scripted AWS path (needs the aws CLI configured):</span>
+<span class="k">fiddy provision --aws</span>
+
+<span class="c"># Or any server you already have:</span>
+<span class="k">fiddy provision --ssh ubuntu@203.0.113.10</span></pre>
+  <p class="dim">The AWS path creates a t3.xlarge with Docker preinstalled, generates an SSH keypair into
+  <code class="inline">~/.fiddy/</code>, and locks the security group down: SSH and the node API answer
+  <strong>your IP only</strong>; gossip ports stay open to the network (that's how your node talks to peers).
+  Either path saves the target to <code class="inline">~/.fiddy/config</code>.</p>
+</div></section>
+
+<section id="step1"><div class="wrap">
+  <div class="kicker">Command 1</div>
+  <h2><span class="n">1</span>fiddy node up</h2>
+  <p class="dim">This installs Docker and the official Snapchain bootstrap on your server and starts syncing.
+  You now run a <strong>read node</strong>: it follows the chain, stores the full state, and serves the HTTP
+  (<code class="inline">:3381</code>) and gRPC (<code class="inline">:3383</code>) APIs. Anyone can run one. No permission, no API keys.</p>
+  <pre><span class="k">fiddy node up</span>      <span class="c"># install, start, wait for the API to answer</span>
+<span class="k">fiddy node status</span>  <span class="c"># sync progress</span>
+<span class="k">fiddy node logs</span>    <span class="c"># tail the node</span></pre>
+
+  <div class="pane note">
+    <div class="t">Read nodes vs validators — and where your casts go</div>
+    <p><strong>Validators</strong> propose and vote on blocks; only keys in the validator set can. <strong>Read nodes</strong> do everything else — including accepting writes.</p>
+    <p>When you <code class="inline">submitMessage</code> to your read node, it validates the message and <strong>gossips it to validators</strong> — a read node has no mempool of its own. A success response means "valid, accepted for relay," <em>not</em> "in a block." Confirm inclusion by watching for a <code class="inline">MERGE_MESSAGE</code> event or querying the message back. Under heavy network load a gossiped message can drop and need resubmitting; the client can fall back to submitting at a validator endpoint, and this tutorial shows you the trade-off when it matters.</p>
+  </div>
+  <p class="dim">Full sync takes hours; the API answers immediately and catches up in the background.</p>
+</div></section>
+
+<section id="step2"><div class="wrap">
+  <div class="kicker">Command 2</div>
+  <h2><span class="n">2</span>fiddy client up</h2>
+  <p class="dim">Boots the Fiddy web client pointed at <em>your</em> node for reads and writes. If your node's API
+  is locked to your IP (the AWS default), add <code class="inline">--tunnel</code> and the CLI opens an SSH tunnel for the session.</p>
+  <pre><span class="k">fiddy client up --tunnel</span></pre>
+
+  <p class="dim" style="margin-top:20px"><strong>Signing in = giving the client its own key.</strong> Import the seed phrase of an
+  account that already has storage. The client derives your custody address, and uses it <em>once</em> — to sign a
+  gasless <code class="inline">KEY_ADD</code> message that registers a fresh ed25519 app key for the client. No Optimism
+  transaction, no ETH, confirmed in seconds. From then on the custody key sits idle and the app key signs your casts,
+  follows, and reactions — scoped, capped, and revocable from the UI with a <code class="inline">KEY_REMOVE</code>.</p>
+
+  <div class="pane note warn">
+    <div class="t">Seed phrases: powerful, handle like rm -rf</div>
+    <p>A seed phrase is your custody address is your FID. Anyone holding it owns the account. Follow this tutorial with a <strong>test account only</strong>. In general, paste a seed phrase only into software from developers you trust, running locally, source available — this repo is MIT and the phrase never leaves your browser, but verify that yourself; that's the point of open source. Wherever possible prefer <strong>delegated signer authorization</strong> (approve an app key from an already-authenticated client) over seed import.</p>
+  </div>
+
+  <p class="dim">From here the client is fully yours: read the feed from your node, post casts, follow, react,
+  and include or exclude casts from any other client in your view settings.</p>
+</div></section>
+
+<section id="agent"><div class="wrap">
+  <div class="kicker">The part no other client has</div>
+  <h2>Hatch your Fiddy agent</h2>
+  <p class="dim">One click in the client provisions a <strong>dedicated Hermes instance</strong> on Agent37 cloud —
+  not a chatbot, a real agent with its own computer, awake 24/7. It lives in your client, chats with you there,
+  and runs scheduled jobs: <em>"check my mentions every morning," "draft my weekly recap cast."</em></p>
+  <p class="dim">Through Hermes, your Fiddy reaches every channel you do — with your explicit approval on each one:</p>
+  <div class="card agent">
+    <div class="channels">
+      <span class="chip hot">Farcaster</span><span class="chip">iMessage</span><span class="chip">Discord</span>
+      <span class="chip">Telegram</span><span class="chip">WhatsApp</span><span class="chip">Email</span><span class="chip">Web &amp; API</span>
+    </div>
+    <p class="dim" style="margin:16px 0 0">Your agent acts on Farcaster under <strong>its own FID and its own gasless app key</strong> —
+    clearly the agent's voice, revocable by you at any time. It reads from the same node you just stood up:
+    the whole stack, end to end, nobody's API key in sight.</p>
+  </div>
+</div></section>
+
+<section id="faq"><div class="wrap">
+  <div class="kicker">Reference</div>
+  <h2>Questions you'll hit</h2>
+  <table>
+    <tr><th>Question</th><th>Answer</th></tr>
+    <tr><td>Does this cost ETH?</td><td>No. App keys are gasless <code class="inline">KEY_ADD</code> messages since Snapchain V16. You need an existing account with storage rent paid — that's all.</td></tr>
+    <tr><td>Can my node accept casts?</td><td>Yes — read nodes validate and gossip writes to validators. They hold no mempool, so under load a write can drop; watch for <code class="inline">MERGE_MESSAGE</code> or query it back, and resubmit if needed.</td></tr>
+    <tr><td>What can the app key do?</td><td>Only the message types you scope it to (casts, reactions, links, user data). Keys slide-expire in at most 90 days, cap at 1000 per FID, and revoke instantly with <code class="inline">KEY_REMOVE</code>.</td></tr>
+    <tr><td>Where's the custody key?</td><td>In your browser, used once for the EIP-712 <code class="inline">KEY_ADD</code> authorization, then idle. Never sent anywhere, never stored server-side.</td></tr>
+    <tr><td>Who am I depending on?</td><td>Your compute provider for uptime, and the Snapchain validator set for block production — the same set every client depends on. Reads, writes, and identity tooling are all yours.</td></tr>
+  </table>
+</div></section>
+
+<footer><div class="wrap">
+  <div class="rule"></div>
+  <p><strong style="color:var(--ink)">fiddy.fun</strong> · MIT-licensed · <a href="https://github.com/ivcained/fiddy">github.com/ivcained/fiddy</a></p>
+  <p style="margin-top:8px">Built on <a href="https://snapchain.farcaster.xyz">Snapchain</a> and the Farcaster protocol. Agent powered by <a href="https://hermes-agent.nousresearch.com">Hermes</a> on Agent37. Fork of the Farcaster client snapshot with external-wallet support.</p>
+</div></footer>
+
+<script>
+document.querySelectorAll('.qs-copy').forEach(b => b.addEventListener('click', () => {
+  navigator.clipboard?.writeText(b.dataset.c).then(() => { b.textContent = 'copied'; setTimeout(() => b.textContent = 'copy', 1200); });
+}));
+</script>
+</body>
+</html>
