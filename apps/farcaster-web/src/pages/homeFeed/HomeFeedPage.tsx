@@ -29,7 +29,7 @@ const HomeFeedPage = React.memo(() => {
     return (
       <Page
         meta={{
-          title: 'Farcaster / Home',
+          title: 'Fiddy / Home',
           description: 'A decentralized social network',
           canonical: 'https://farcaster.xyz',
           twitterCard: 'summary',
@@ -114,7 +114,7 @@ function HomeFeedTabbed() {
   return (
     <Page
       meta={{
-        title: 'Farcaster / Home',
+        title: 'Fiddy / Home',
         description: 'A decentralized social network',
         canonical: 'https://farcaster.xyz',
         twitterCard: 'summary',
