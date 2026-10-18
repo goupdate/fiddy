@@ -17,7 +17,7 @@ text first; if the composer refuses it, post the short one and then reply to it 
 
 ```
 @balajis.eth — $2048 FOR FARCASTER CLIENTS submission.
-(1) https://fiddy.fun/client (中文 /client/zh)
+(1) https://fiddy.fun/client (中文 /client/zh/)
 (2) https://github.com/ivcained/fiddy
 (3) Voucher: <VOUCHER_CAST_URL>
 3 commands: fiddy provision → fiddy node up → fiddy client up. No API keys.
@@ -26,7 +26,7 @@ text first; if the composer refuses it, post the short one and then reply to it 
 ## Before posting
 
 1. Replace `<VOUCHER_CAST_URL>` with the voucher's cast URL and `<HANDLE>` with their username.
-2. Re-check every URL answers: `curl -sI https://fiddy.fun/client`, `curl -sI https://fiddy.fun/client/zh`
+2. Re-check every URL answers: `curl -sI https://fiddy.fun/client`, `curl -sI https://fiddy.fun/client/zh/`
    (the Chinese tutorial, extra-mile item; `/client` links to it in the header and footer) and
    `gh repo view ivcained/fiddy --json visibility,licenseInfo`.
 3. Confirm the repo default branch is pushed (`git status -sb` clean, `main == origin/main`) — the judge reads the repo, not the local clone.

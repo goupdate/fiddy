@@ -39,7 +39,7 @@ Time left from 2026-10-18T14:07Z: **6 days 0h 40m**.
 | 1 | https://fiddy.fun/client | Live, HTTP 200, quickstart hero + tutorial present (checked 2026-10-18) |
 | 2 | https://github.com/ivcained/fiddy | Public, MIT, main == origin/main (checked 2026-10-18) |
 | 3 | voucher's cast | **Missing — this is the whole campaign.** |
-| 4 | https://fiddy.fun/client/zh | Chinese translation of the tutorial, `site/zh/index.html`, linked from `/client` and from the footer, hreflang both ways (extra-mile item 2, ranked above the video). Live 2026-10-18 |
+| 4 | https://fiddy.fun/client/zh/ | Chinese translation of the tutorial, `site/zh/index.html`, linked from `/client` and from the footer, hreflang both ways (extra-mile item 2, ranked above the video). Live 2026-10-18 |
 
 Ready-to-paste reply: `docs/SUBMISSION-REPLY.md` (insert the voucher cast URL).
 
@@ -173,5 +173,5 @@ https://fiddy.fun/client
    (**974 characters / 986 bytes** with a real voucher URL — under the protocol's 1024-byte cast cap, checked
    by byte count), or the short 268-character variant at the top of `docs/SUBMISSION-REPLY.md` if the composer
    refuses long casts.
-3. **Extra mile**: the Chinese translation is **done and live** (https://fiddy.fun/client/zh). The 59s video is
+3. **Extra mile**: the Chinese translation is **done and live** (https://fiddy.fun/client/zh/). The 59s video is
    now the only outstanding extra-mile item; a second vouch is worth more than both, so it stays last.
