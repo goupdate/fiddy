@@ -39,6 +39,7 @@ Time left from 2026-10-18T14:07Z: **6 days 0h 40m**.
 | 1 | https://fiddy.fun/client | Live, HTTP 200, quickstart hero + tutorial present (checked 2026-10-18) |
 | 2 | https://github.com/ivcained/fiddy | Public, MIT, main == origin/main (checked 2026-10-18) |
 | 3 | voucher's cast | **Missing — this is the whole campaign.** |
+| 4 | https://fiddy.fun/client/zh | Chinese translation of the tutorial, `site/zh/index.html`, linked from `/client` and from the footer, hreflang both ways (extra-mile item 2, ranked above the video). Live 2026-10-18 |
 
 Ready-to-paste reply: `docs/SUBMISSION-REPLY.md` (insert the voucher cast URL).
 
@@ -69,10 +70,17 @@ protocol's real disk requirement. Cheaper 2 TB VPS hosts (Hetzner/Contabo/OVH cl
 | P1 | AWS path is quoted as **~$100/mo**; the real figure at 2 TB is ~$285/mo (§4). Quote the honest number and point at `--ssh` + cheaper hosts, or a voucher feels misled. | AWS prices, 2026-10-18 | `t_fa420e09` |
 | P2 | The bounty brief says a read node **"does not accept writes"** and that the app key costs **"one small Optimism transaction"**. Both are stale, and our tutorial says so. The tutorial must state the brief's assumption and then show the current behaviour, or a judge diffing the text against the brief reads it as an error. | `snapchain.farcaster.xyz/node-types#message-submission-and-the-mempool`: `submitMessage` works on both roles; a read node has no mempool, validates, gossips to validators; confirm via `MERGE_MESSAGE` or query-back. Gasless `KEY_ADD` since Snapchain V16. | submission reply (§6) + tutorial |
 | P3 | Block pruning is **read-nodes-only and off by default** (`pruning.block_retention`), so "it will prune itself" is not a way to keep a small disk. | snapchain docs, node management table | `t_fa420e09` |
-| P4 | No Farcaster posting credentials exist on this machine (`~/.hermes/.env` has no Farcaster/Neynar keys), and no public hub API is reachable from here (pinata/nemes/DNS-blocked; Neynar 402). So the recruitment cast and the submission reply must be posted by the owner, from a client — not scripted by us. | probes, 2026-10-18 | owner |
+| P4 | No Farcaster posting credentials exist on this machine (`~/.hermes/.env` has no Farcaster/Neynar keys). **Corrected 2026-10-18: reading is possible** — `nemes.farcaster.xyz` and `hub.pinata.cloud` are DNS-blocked and Neynar answers 402, but the public hub `https://haatz.quilibrium.com` works from here (`/v1/castsByParent?fid=37&hash=…&pageSize=50` returned all 37 replies), so the vouch and the thread can be read and verified programmatically. Posting still must happen from the owner's account: a cast needs a signature from an app key authorised by the owner's FID, and no such key exists here. | probes, 2026-10-18 | owner |
 | P5 | **Fixed 2026-10-18.** The live step-0 command read `fiddy provision --ssh [email protected]` — Cloudflare Scrape Shield rewrote the sample `ubuntu@203.0.113.10` into a `__cf_email__` span whose decoder the `/client` CSP blocks. Anyone copy-pasting the command failed instantly. Fixed in `358111f`; re-verified live: the page now serves `ubuntu&#64;203.0.113.10` and no `__cf_email__` remains. | live page fetch, 2026-10-18 | t_4b504279 (done) |
 
 Live-page re-check 2026-10-18 after `358111f`: HTTP 200, quickstart hero intact, `--ssh` sample command copy-safe, `200 GB SSD` still published (P0 open).
+
+**P0/P1 page copy fixed 2026-10-18** (`site/index.html`): the requirements line now reads 4 vCPU / 16 GB RAM /
+**1.5–2 TB free disk** with the snapshot's ~200 GB *compressed* size named as the reason, and the AWS figure is
+the honest **~$285/month** (instance ~$121 + 2 TB gp3 ~$164) with the $50–80/month 2 TB VPS alternative.
+The paragraph no longer names an instance type, so it stays true whatever `cli/provision.sh` defaults to;
+the CLI-side volume/default change is owned by `t_fa420e09` (their in-flight diff already moves the default
+volume to `${FIDDY_AWS_VOLUME_GB:-2048}` GB on m5.xlarge). Nobody else owns this text now — one owner, one commit.
 
 ## 6. Submission reply
 
@@ -90,7 +98,13 @@ Where to look, in order of conversion:
 3. Anyone in the replies of the bounty cast who asks "how do I vouch" — reply helpfully, not with a pitch.
 
 Competitive note: @mobeen02 already posted "Need a voucher for Balaji's $2048 Farcaster bounty" (2026-10-17T17:39Z),
-and the bounty has 24 replies. The field is moving; recruit today.
+and the bounty has 37 replies (35 authors, read 2026-10-18 from the public hub). The field is moving; recruit today.
+
+**Targeting is no longer guesswork: `docs/VOUCHER-RECRUIT-TARGETS.md`** ranks five entrants who publicly asked
+for a tester or a voucher in that same thread (@mobeen02, @vaibhavmule, @sats100m, @0xzoz, @webthe3rd.eth),
+five node operators who already run the hardware, and the exact DM copy for each. The strongest single deal is
+@0xzoz — 13.1k followers, needs an **agent-led** clean-machine run of "In Three" by 2026-10-23T14:47Z, which this
+machine can supply outright in exchange for a human clean-machine run of ours ending in the vouch cast.
 
 Recruitment cast copy (post from the owner's account):
 
@@ -151,8 +165,13 @@ https://fiddy.fun/client
 
 ## 10. Owner decisions needed
 
-1. **Who is the voucher?** A name/handle to DM, or approval to post the public ask cast above.
+1. **Who is the voucher?** A name/handle to DM, or approval to post the public ask cast above. The ranked
+   shortlist with paste-ready DMs is `docs/VOUCHER-RECRUIT-TARGETS.md` — pick any one of the five tier-1 handles
+   and the DM is already written.
 2. **Which account posts the submission reply** (and the recruitment cast) — the reply must come from the owner's
-   Farcaster account, and the prize is paid to a public Farcaster wallet address.
-3. **Extra mile**: Chinese translation and the 59s video are both second to more vouches. Decide only after voucher
-   #1 is confirmed; a second voucher is worth more than either.
+   Farcaster account, and the prize is paid to a public Farcaster wallet address. Use the full-length text
+   (**974 characters / 986 bytes** with a real voucher URL — under the protocol's 1024-byte cast cap, checked
+   by byte count), or the short 268-character variant at the top of `docs/SUBMISSION-REPLY.md` if the composer
+   refuses long casts.
+3. **Extra mile**: the Chinese translation is **done and live** (https://fiddy.fun/client/zh). The 59s video is
+   now the only outstanding extra-mile item; a second vouch is worth more than both, so it stays last.

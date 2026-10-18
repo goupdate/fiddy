@@ -9,6 +9,8 @@
 <meta property="og:description" content="Your node. Your client. Your agent. No API keys.">
 <meta property="og:url" content="https://fiddy.fun/client">
 <link rel="canonical" href="https://fiddy.fun/client">
+<link rel="alternate" hreflang="en" href="https://fiddy.fun/client">
+<link rel="alternate" hreflang="zh-Hans" href="https://fiddy.fun/client/zh">
 <style>
 /* ---- Fiddy dark material: Solid Glass rules, hand-applied ----
    1. Finish at the edge: rim of light on top, hairline round, shade under.
@@ -149,7 +151,9 @@ footer .rule { height: 1px; background: rgba(255 255 255 / 0.08); margin-bottom:
 <body>
 
 <header class="hero"><div class="wrap">
-  <div class="wordmark"><span class="dot"></span>fiddy.fun</div>
+  <div class="wordmark"><span class="dot"></span>fiddy.fun
+    <a href="/client/zh" hreflang="zh-Hans" style="margin-left:auto;border:0;font:600 12px/1 var(--mono);letter-spacing:0.1em">中文</a>
+  </div>
   <h1>Your own Farcaster client.<br>Your own node. <span class="lime">Three commands.</span></h1>
   <p class="lede">No API keys from anyone. You furnish the compute; a Snapchain read node
   syncs the network; the Fiddy client reads and writes through it. Then — the part no other
@@ -195,8 +199,11 @@ footer .rule { height: 1px; background: rgba(255 255 255 / 0.08); margin-bottom:
 <section id="step0"><div class="wrap">
   <div class="kicker">Command 0</div>
   <h2><span class="n">0</span>fiddy provision</h2>
-  <p class="dim">A read node needs a server: <strong>4 vCPU, 16 GB RAM, 200 GB SSD</strong>, Ubuntu 22.04+.
-  That runs about <strong>$100/month</strong> on AWS; any equivalent VPS works.</p>
+  <p class="dim">A read node needs a server: <strong>4 vCPU, 16 GB RAM, 1.5&ndash;2 TB free disk</strong>, Ubuntu 22.04+.
+  The mainnet snapshot is ~200 GB <em>compressed</em> and takes several times that once decompressed &mdash; size for
+  <strong>1.5&ndash;2 TB</strong>, not 200 GB. On AWS the list price for that is about <strong>$285/month</strong>
+  (instance ~$121 + 2 TB gp3 ~$164); any equivalent VPS works and is far cheaper &mdash; a 2 TB box at Hetzner /
+  Contabo / OVH class hosts typically runs <strong>$50&ndash;80/month</strong>.</p>
   <!-- Keep the @ as &#64;: Cloudflare Scrape Shield rewrites literal addresses into a
        span that needs its decoder script, which this page's CSP blocks — the command
        would render as "[email protected]" live. -->
@@ -205,7 +212,7 @@ footer .rule { height: 1px; background: rgba(255 255 255 / 0.08); margin-bottom:
 
 <span class="c"># Or any server you already have:</span>
 <span class="k">fiddy provision --ssh ubuntu&#64;203.0.113.10</span></pre>
-  <p class="dim">The AWS path creates a t3.xlarge with Docker preinstalled, generates an SSH keypair into
+  <p class="dim">The AWS path creates a 4 vCPU / 16 GB instance with a gp3 volume sized for a read node and Docker preinstalled, generates an SSH keypair into
   <code class="inline">~/.fiddy/</code>, and locks the security group down: SSH and the node API answer
   <strong>your IP only</strong>; gossip ports stay open to the network (that's how your node talks to peers).
   Either path saves the target to <code class="inline">~/.fiddy/config</code>.</p>
@@ -284,7 +291,7 @@ footer .rule { height: 1px; background: rgba(255 255 255 / 0.08); margin-bottom:
 
 <footer><div class="wrap">
   <div class="rule"></div>
-  <p><strong style="color:var(--ink)">fiddy.fun</strong> · MIT-licensed · <a href="https://github.com/ivcained/fiddy">github.com/ivcained/fiddy</a></p>
+  <p><strong style="color:var(--ink)">fiddy.fun</strong> · MIT-licensed · <a href="https://github.com/ivcained/fiddy">github.com/ivcained/fiddy</a> · <a href="/client/zh" hreflang="zh-Hans">中文</a></p>
   <p style="margin-top:8px">Built on <a href="https://snapchain.farcaster.xyz">Snapchain</a> and the Farcaster protocol. Agent powered by <a href="https://hermes-agent.nousresearch.com">Hermes</a> on Agent37. Fork of the Farcaster client snapshot with external-wallet support.</p>
 </div></footer>
 
