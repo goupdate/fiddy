@@ -42,6 +42,8 @@ Time left from 2026-10-18T14:07Z: **6 days 0h 40m**.
 
 Ready-to-paste reply: `docs/SUBMISSION-REPLY.md` (insert the voucher cast URL).
 
+Local smoke of the voucher's first minute (fresh `FIDDY_HOME`, 2026-10-18): `fiddy doctor` reports ready (ssh/curl/pnpm/node all found; aws and docker flagged optional with the reason), `fiddy config` answers cleanly before any setup, and `fiddy provision` with no arguments prints the two compute options instead of failing. No blockers on the first-run path. The same menu still quotes "~$100/mo" and "200 GB SSD" — trip points P0/P1.
+
 ## 4. Voucher prerequisites — tell them before they start
 
 A voucher needs, in this order:
