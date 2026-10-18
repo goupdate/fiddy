@@ -1,4 +1,49 @@
-# Farcaster Wallet Client
+# Fiddy — your own Farcaster client, on your own node, in three commands
+
+Fiddy is a forkable Farcaster client with external wallet support that reads
+and writes through **your own Snapchain read node** — no API keys, no Neynar,
+no Alchemy. You furnish the compute; the node syncs the network.
+
+Full tutorial (mobile + desktop, protocol concepts explained as you go):
+**https://fiddy.fun/client** — or open `site/index.html` locally.
+
+## Quickstart
+
+```bash
+git clone https://github.com/ivcained/fiddy && cd fiddy
+
+fiddy provision   # (0) compute: AWS EC2 via aws CLI, or register any server (--ssh user@host)
+fiddy node up     # (1) Snapchain read node on that compute — installs, syncs, waits for health
+fiddy client up   # (2) the Fiddy web client, reading YOUR node (SSH-tunneled by default)
+```
+
+Run `bin/fiddy` directly (`bash bin/fiddy …`) or put it on your `PATH`.
+`fiddy doctor` checks your local prerequisites; `fiddy node status` reports
+sync health; `fiddy client up --tunnel` is the default because node APIs
+should not be public.
+
+**Posting is gasless.** The client issues itself an app key with a `KEY_ADD`
+message signed by your custody address — no ETH, no Optimism transaction,
+live in about a second. Import a seed phrase from a **test account** that
+already has storage: the seed never leaves your browser, and it only ever
+authorizes the app key. Read
+[the seed-phrase safety section](https://fiddy.fun/client#safety) before
+importing anything.
+
+## What you get
+
+- **Your reads and writes, your infra** — feed, casts, follows, reactions and
+  include/exclude of other clients' casts, all served by your node.
+- **External wallets, non-custodial** — WalletConnect (EVM + Solana),
+  EIP-6963 discovery, optional unified MetaMask Connect. No seed phrase is
+  created, requested, or stored by the client beyond the local import above.
+- **The Fiddy Agent (optional)** — one click hatches your own Hermes agent on
+  Agent37 cloud that lives in the client and can connect to every channel
+  you approve.
+
+---
+
+# Farcaster Wallet Client (upstream)
 
 A fork of the [Farcaster client snapshot](https://github.com/farcasterxyz/client)
 that adds a non-custodial wallet experience to the web client.
