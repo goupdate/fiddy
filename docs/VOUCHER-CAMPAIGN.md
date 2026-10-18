@@ -68,6 +68,9 @@ protocol's real disk requirement. Cheaper 2 TB VPS hosts (Hetzner/Contabo/OVH cl
 | P2 | The bounty brief says a read node **"does not accept writes"** and that the app key costs **"one small Optimism transaction"**. Both are stale, and our tutorial says so. The tutorial must state the brief's assumption and then show the current behaviour, or a judge diffing the text against the brief reads it as an error. | `snapchain.farcaster.xyz/node-types#message-submission-and-the-mempool`: `submitMessage` works on both roles; a read node has no mempool, validates, gossips to validators; confirm via `MERGE_MESSAGE` or query-back. Gasless `KEY_ADD` since Snapchain V16. | submission reply (§6) + tutorial |
 | P3 | Block pruning is **read-nodes-only and off by default** (`pruning.block_retention`), so "it will prune itself" is not a way to keep a small disk. | snapchain docs, node management table | `t_fa420e09` |
 | P4 | No Farcaster posting credentials exist on this machine (`~/.hermes/.env` has no Farcaster/Neynar keys), and no public hub API is reachable from here (pinata/nemes/DNS-blocked; Neynar 402). So the recruitment cast and the submission reply must be posted by the owner, from a client — not scripted by us. | probes, 2026-10-18 | owner |
+| P5 | **Fixed 2026-10-18.** The live step-0 command read `fiddy provision --ssh [email protected]` — Cloudflare Scrape Shield rewrote the sample `ubuntu@203.0.113.10` into a `__cf_email__` span whose decoder the `/client` CSP blocks. Anyone copy-pasting the command failed instantly. Fixed in `358111f`; re-verified live: the page now serves `ubuntu&#64;203.0.113.10` and no `__cf_email__` remains. | live page fetch, 2026-10-18 | t_4b504279 (done) |
+
+Live-page re-check 2026-10-18 after `358111f`: HTTP 200, quickstart hero intact, `--ssh` sample command copy-safe, `200 GB SSD` still published (P0 open).
 
 ## 6. Submission reply
 
