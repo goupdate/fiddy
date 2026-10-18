@@ -7,6 +7,8 @@
 <meta name="description" content="Provision compute, run a Snapchain read node, boot a client. No API keys, no third parties. Plus: your own Hermes agent inside the client.">
 <meta property="og:title" content="Fiddy — three commands to your own Farcaster client">
 <meta property="og:description" content="Your node. Your client. Your agent. No API keys.">
+<meta property="og:url" content="https://fiddy.fun/client">
+<link rel="canonical" href="https://fiddy.fun/client">
 <style>
 /* ---- Fiddy dark material: Solid Glass rules, hand-applied ----
    1. Finish at the edge: rim of light on top, hairline round, shade under.
@@ -20,6 +22,7 @@
   --lime: #d4ff3f;
   --lime-ink: #1a1c10;        /* dark ink on chartreuse — ~6:1, never light text */
   --lime-deep: #7cb518;       /* chartreuse darkened for text/icons on dark */
+  --cmt: #868b7a;             /* code comments — 5.4:1 on #10110f, AA */
   --pane: rgba(255 255 255 / 0.045);
   --card: rgba(255 255 255 / 0.075);
   --popover: rgba(28 30 26 / 0.92);
@@ -30,7 +33,7 @@
   --mono: "SF Mono", ui-monospace, "JetBrains Mono", Menlo, monospace;
 }
 * { margin: 0; padding: 0; box-sizing: border-box; }
-html { scroll-behavior: smooth; }
+html { scroll-behavior: smooth; background: var(--ground); }
 body {
   background: var(--ground); color: var(--ink);
   font: 16px/1.6 -apple-system, BlinkMacSystemFont, "Inter", "Segoe UI", sans-serif;
@@ -111,7 +114,7 @@ pre {
   margin: 16px 0;
   box-shadow: inset 0 1px 0 rgba(255 255 255 / 0.07), inset 0 0 0 1px var(--edge), 0 4px 16px var(--shade);
 }
-pre .c { color: #6b7060; } pre .k { color: var(--lime); }
+pre .c { color: var(--cmt); } pre .k { color: var(--lime); }
 
 .note { padding: 16px 20px; margin: 18px 0; }
 .note .t { font: 700 12px/1 var(--mono); letter-spacing: 0.1em; text-transform: uppercase; margin-bottom: 8px; }
@@ -236,7 +239,7 @@ footer .rule { height: 1px; background: rgba(255 255 255 / 0.08); margin-bottom:
   transaction, no ETH, confirmed in seconds. From then on the custody key sits idle and the app key signs your casts,
   follows, and reactions — scoped, capped, and revocable from the UI with a <code class="inline">KEY_REMOVE</code>.</p>
 
-  <div class="pane note warn">
+  <div class="pane note warn" id="safety">
     <div class="t">Seed phrases: powerful, handle like rm -rf</div>
     <p>A seed phrase is your custody address is your FID. Anyone holding it owns the account. Follow this tutorial with a <strong>test account only</strong>. In general, paste a seed phrase only into software from developers you trust, running locally, source available — this repo is MIT and the phrase never leaves your browser, but verify that yourself; that's the point of open source. Wherever possible prefer <strong>delegated signer authorization</strong> (approve an app key from an already-authenticated client) over seed import.</p>
   </div>
