@@ -11,6 +11,7 @@ Ship three things as one coherent product:
 1. **The Fiddy client** — a fork of `0xterricola/farcaster-wallet-client` (itself a fork of the Farcaster client snapshot with external wallet support), rebranded with the Fiddy identity (chartreuse / #161715, Solid Glass + Awwwards-grade UI), reading from the user's own Snapchain read node and writing through it (read nodes gossip valid messages to validators — no API keys, no Neynar, no Alchemy).
 2. **One-click node deploy** — an agent-on-cloud service: the user furnishes compute (any VPS; AWS path scripted first, ~$100/mo), Fiddy provisions and boots a Snapchain read node, then points the client at it.
 3. **The tutorial microsite** — quickstart at the top (three commands), then a mobile- and desktop-friendly tutorial that teaches protocol concepts as it goes: FIDs, custody addresses, app keys (gasless `KEY_ADD`), Snapchain messages, read nodes vs validators and the mempool path, storage rent, seed-phrase safety.
+4. **The Fiddy Agent (the differentiator)** — every client user can hatch their own autonomous Hermes agent, hosted on Agent37 cloud, living inside the client. Not a chatbot bolt-on: a real Hermes instance with its full feature set — scheduled tasks (cron), skills, memory, and every messaging channel Hermes supports (Farcaster first, then iMessage, Discord, Telegram, WhatsApp, email, web/API) — with owner approval on every channel connection. No other Farcaster client ships an agent that works for you 24/7 across your whole communication surface.
 
 Submission: reply to the bounty cast with (1) microsite URL, (2) github.com/ivcained/fiddy (MIT), (3) a voucher's public Farcaster endorsement. Deadline: 7 days from the bounty post (~2026-10-25).
 
@@ -40,11 +41,21 @@ Submission: reply to the bounty cast with (1) microsite URL, (2) github.com/ivca
 19. As a user, I want the app-key scopes and 90-day sliding TTL explained at the moment I create one, so that I understand what the client can and cannot do in my name.
 20. As a user, I want to revoke the client's app key (`KEY_REMOVE`) from the UI, so that I can cut access without onchain transactions.
 
+### Fiddy Agent (Hermes on Agent37)
+21. As a user, I want to hatch my own Fiddy agent from inside the client — one click provisions a dedicated Hermes instance on Agent37 cloud — so that I have an autonomous agent without touching a server.
+22. As a user, I want to chat with my agent inside the client, so that it feels native, not like a separate app.
+23. As a user, I want to schedule tasks for my agent (cron-style: "check my mentions every morning", "draft a weekly recap cast"), so that it works while I sleep.
+24. As a user, I want to connect my agent to iMessage, Discord, Telegram, WhatsApp, email, and web/API — every channel Hermes supports — with an explicit approval step per channel, so that my agent meets people where they are and I stay in control.
+25. As a user, I want my agent to act on Farcaster under its own identity (its own FID + gasless app key), so that its casts, replies, and follows are clearly the agent's, with me able to revoke its key at any time.
+26. As a user, I want the agent's capabilities presented honestly as Hermes' full feature set — skills, memory, tools, scheduling — so that the offering is "a real Hermes instance that is yours," not a wrapped chatbot.
+27. As a user, I want my agent to grow with me — persona drafted from my casts, memory persisted across sessions — so that it becomes more useful over time.
+28. As the maintainer, I want the agent to dogfood the client's own read node, so that the agent proves the infra story end to end.
+
 ### Bounty operations
-21. As the maintainer, I want the repo MIT-licensed with all code open, so that the entry qualifies.
-22. As the maintainer, I want at least one human to complete the tutorial and publicly vouch on Farcaster, so that the entry qualifies — and more vouches as the strongest signal.
-23. As the maintainer, I want stale upstream docs fixed via PRs to farcasterxyz repos when found (hand-written, not AI slop), so that the entry stands out and other devs benefit.
-24. As the maintainer, I want fiddy.fun and the LC gateway VPS synced with the client work, so that the tutorial microsite and one-click deploy land on existing infra.
+29. As the maintainer, I want the repo MIT-licensed with all code open, so that the entry qualifies.
+30. As the maintainer, I want at least one human to complete the tutorial and publicly vouch on Farcaster, so that the entry qualifies — and more vouches as the strongest signal.
+31. As the maintainer, I want stale upstream docs fixed via PRs to farcasterxyz repos when found (hand-written, not AI slop), so that the entry stands out and other devs benefit.
+32. As the maintainer, I want fiddy.fun and the LC gateway VPS synced with the client work, so that the tutorial microsite and one-click deploy land on existing infra.
 
 ## Implementation Decisions
 
@@ -61,6 +72,7 @@ Submission: reply to the bounty cast with (1) microsite URL, (2) github.com/ivca
 - **Seed phrase import**: BIP-39 import of an existing custody address, with a blocking test-account warning screen. Custody key never leaves the client; it signs exactly two things: the EIP-712 `KEY_ADD` authorization and (optionally) fname transfers. All day-to-day signing is the app key.
 - **Client filtering (include/exclude casts from other clients)**: filter on the cast's `client` metadata where available / signer-known-client mapping, as a view-layer preference — never a protocol-level claim.
 - **One-click deploy service**: an agent (Hermes, on the LC gateway VPS) that accepts cloud credentials or an SSH target, runs the same provision + node scripts, and reports health back to the client UI. Self-hosted by default; no custody of user keys server-side.
+- **Fiddy Agent backend**: Agent37 cloud API (`api.agent37.com/v1/instances`) provisions one dedicated Hermes instance per user. The client talks to the instance over the Hermes gateway API (`/v1` chat + profile multiplexing). Channel connections (iMessage/Discord/Telegram/WhatsApp/email) are initiated from the client UI but completed on the instance side, each behind an explicit owner-approval screen — matching the existing fiddy.fun "with your approval on every channel" promise. The agent's Farcaster identity is its own FID with a gasless app key; the owner can revoke it from the client (same `KEY_REMOVE` surface as the client's own app key). Scheduling maps to the instance's cron system; the client exposes a plain-English scheduler UI that writes cron entries. Agent37 keys live server-side only (pattern from `AGENT37-SETUP.md`: hidden prompt, stdin handoff, mode-0600 `.env.local`, status-only checks).
 - **Microsite**: static site in `apps/docs-site` (or `site/`), deployed on the LC VPS (fiddy.fun infra, e.g. `client.fiddy.fun` or `fiddy.fun/client`). Quickstart hero on top; tutorial pages beneath; i18n scaffold with zh as first translation.
 - **Design**: Solid Glass skill theme tokens + Awwwards skill bar; Fiddy brand assets from `/Users/lc/legitmate-farcaster` (chartreuse, #161715, mascot). Mobile-first CSS verified with the project's existing Playwright mobile config pattern.
 - **fiddy.fun sync**: the microsite and deploy agent live on the existing LC gateway VPS alongside the current Fiddy app; the existing Farcaster manifest work (fiddy.fun domain manifest) is untouched by this spec.
