@@ -37,7 +37,7 @@ Time left from 2026-10-18T14:07Z: **6 days 0h 40m**.
 | # | URL | State |
 | --- | --- | --- |
 | 1 | https://fiddy.fun/client | Live, HTTP 200, quickstart hero + tutorial present (checked 2026-10-18) |
-| 2 | https://github.com/ivcained/fiddy | Public, MIT, main == origin/main (checked 2026-10-18) |
+| 2 | https://github.com/ivcained/fiddy | Public, main == origin/main (checked 2026-10-18, head `68761a8`). `LICENSE` at the root is the standard MIT text (`© Neynar, Inc.` — inherited from the upstream client fork, which is the attribution the licence requires and should stay). `gh api repos/ivcained/fiddy/license` serves it; `gh repo view` shows no SPDX badge only because the root `package.json` carries no `license` field |
 | 3 | voucher's cast | **Missing — this is the whole campaign.** |
 | 4 | https://fiddy.fun/client/zh/ | Chinese translation of the tutorial, `site/zh/index.html`, linked from `/client` and from the footer, hreflang both ways (extra-mile item 2, ranked above the video). Live 2026-10-18 |
 
